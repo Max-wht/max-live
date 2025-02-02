@@ -1,0 +1,30 @@
+ECS:
+  ip: 121.41.93.88
+
+#服务端口
+server:
+  port: 8081
+
+#Nacos注册地址
+spring:
+  application:
+    name: max-live-user-provider
+  cloud:
+    nacos:
+      discovery:
+        namespace: max-live
+        server-addr: ${ECS.ip}:8848
+
+#dubbo服务注册地址
+dubbo:
+  application:
+    name: ${spring.application.name}
+    qos-enable: false
+  registry:
+    address: nacos://${ECS.ip}:8848?namespace=max-live
+    id: nacos-registry
+  protocol:
+    name: dubbo
+    port: -1
+
+debug: true
