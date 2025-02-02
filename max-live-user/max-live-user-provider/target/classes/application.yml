@@ -1,0 +1,44 @@
+ECS:
+  ip: 121.41.93.88
+
+#服务端口
+server:
+  port: 8082
+
+#Nacos注册地址
+spring:
+  application:
+    name: max-live-user-provider
+  cloud:
+    nacos:
+      discovery:
+        namespace: max-live
+        server-addr: ${ECS.ip}:8848
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${ECS.ip}:3306/mlive?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+  data:
+    redis:
+      host: ${ECS.ip}
+      port: 6379
+      lettuce:
+        pool:
+          min-idle: 10
+          max-active: 100
+          max-idle: 10
+
+#dubbo服务注册地址
+dubbo:
+  application:
+    name: ${spring.application.name}
+    qos-enable: false
+  registry:
+    address: nacos://${ECS.ip}:8848?namespace=max-live
+    id: nacos-registry
+  protocol:
+    name: dubbo
+    port: -1
+
+
