@@ -38,7 +38,8 @@ public class SmsServie {
         Object smsRecord = redisTemplate.opsForValue().get(smskey);
 
         if(smsRecord == null){//如果没有，则生成一个验证码，并把验证码和手机号保存到Redis中，并返回true
-            int smsCode = new Random().nextInt(1000, 9999);
+            //生成一个1000-9999的随机验证码
+            int smsCode = new Random().nextInt(8999) + 1000;
             log.info("手机号{}生成验证码{}", mobile, smsCode);
             redisTemplate.opsForValue().set(smskey, smsCode, 1, TimeUnit.MINUTES);
             //发送验证码
