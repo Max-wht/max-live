@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author max
+ *
+ */
 @Service
 public class SmsServie {
     @Autowired
