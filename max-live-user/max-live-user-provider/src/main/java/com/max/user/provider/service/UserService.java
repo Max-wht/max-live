@@ -2,10 +2,12 @@ package com.max.user.provider.service;
 
 import com.max.common.redis.SMSCatchKeyBuilder;
 import com.max.dto.UserDTO;
+import com.max.dto.UserLoginDTO;
 import com.max.inter.IUserRPCService;
 import com.max.live.utils.ConvertBeanUtil;
 import com.max.user.provider.entity.SmsDO;
 import com.max.user.provider.entity.UserDO;
+import com.max.user.provider.entity.UserPhoneDO;
 import com.max.user.provider.mapper.SmsMapper;
 import com.max.user.provider.mapper.UserMapper;
 import com.max.user.provider.utils.UserRedisKeyBuilder;
@@ -20,6 +22,11 @@ import java.sql.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Max
+ * @date 2023/8/16 16:06
+ * @description
+ */
 @Service
 public class UserService{
     @Autowired
@@ -73,5 +80,17 @@ public class UserService{
     }
 
 
+    /**
+     * 根据手机号生成默认用户信息，并且绑定手机号码
+     * @param moblie
+     * @return
+     */
+    public UserLoginDTO generateDefaultUserByMoblie(String moblie) {
+        UserDO userDO = new UserDO();
+        //TODO 主键分配
+        Long userId = 10L;
+        userDO.setUserId();
 
+        UserPhoneDO userPhoneDO = new UserPhoneDO();
+    }
 }

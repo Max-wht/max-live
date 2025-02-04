@@ -1,5 +1,6 @@
 package com.max.user.provider.impl;
 
+import com.max.dto.CheckLoginDTO;
 import com.max.dto.UserDTO;
 import com.max.inter.IUserRPCService;
 import com.max.user.provider.service.SmsServie;
@@ -30,6 +31,18 @@ public class UserRPCService implements IUserRPCService{
     @Override
     public boolean sendLoginCode(String mobile) {
         return smsServie.sendLoginCode(mobile);
+    }
+
+    @Override
+    public CheckLoginDTO checkLoginCode(String moblie, int code) {
+        //调用本地短信服务校验验证码
+        CheckLoginDTO checkStatus = smsServie.checkLoginCode(moblie, code);
+        return checkStatus;
+    }
+
+    @Override
+    public String createCookie(Long userId) {
+        return smsServie.createCookie(userId);
     }
 
 }

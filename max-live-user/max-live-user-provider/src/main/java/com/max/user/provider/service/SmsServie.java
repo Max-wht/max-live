@@ -1,6 +1,7 @@
 package com.max.user.provider.service;
 
 import com.max.common.redis.SMSCatchKeyBuilder;
+import com.max.dto.CheckLoginDTO;
 import com.max.user.provider.entity.SmsDO;
 import com.max.user.provider.mapper.SmsMapper;
 import jakarta.annotation.Resource;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -70,5 +72,39 @@ public class SmsServie {
 
     private boolean sendSms(String mobile, int smsCode) {
         return true;
+    }
+
+    /**
+     * 校验验证码
+     * @param moblie
+     * @param code
+     * @return
+     */
+    public CheckLoginDTO checkLoginCode(String moblie, int code) {
+        //参数校验
+        if(!StringUtils.hasText(moblie) || code < 1000 || code > 9999){
+            return new CheckLoginDTO(false, "参数错误");
+        }
+        //从redis中比较验证码是否正确
+        String smskey = smsCatchKeyBuilder.buildSmsLoginCodeKey(moblie);
+        Integer smsCode = (Integer)redisTemplate.opsForValue().get(smskey);
+        if (smsCode == null) {
+            return new CheckLoginDTO(false, "验证码已过期");
+        }
+        if (smsCode.equals(code)) {
+            redisTemplate.delete(smskey);
+            return new CheckLoginDTO(true, "验证成功");
+        } else {
+            return new CheckLoginDTO(false, "验证码错误");
+        }
+    }
+
+    /**
+     * 创建cookie
+     * @param userId
+     * @return
+     */
+    public String createCookie(Long userId){
+        return null;
     }
 }

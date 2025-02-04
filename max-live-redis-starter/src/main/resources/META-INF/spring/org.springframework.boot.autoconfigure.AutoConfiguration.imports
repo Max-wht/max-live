@@ -1,2 +1,3 @@
 com.max.common.redis.config.RedisConfig
 com.max.common.redis.SMSCatchKeyBuilder
+com.max.common.redis.UserCatchKeyBuilder

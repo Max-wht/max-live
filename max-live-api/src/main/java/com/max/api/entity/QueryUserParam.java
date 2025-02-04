@@ -1,8 +1,8 @@
-package com.max.dto;
+package com.max.api.entity;
 
 import java.io.Serializable;
 
-public class QueryUser implements Serializable {
+public class QueryUserParam implements Serializable {
     private Long userId;
 
     public Long getUserId() {
