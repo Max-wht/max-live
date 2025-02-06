@@ -10,6 +10,7 @@ import com.max.user.provider.entity.UserDO;
 import com.max.user.provider.entity.UserPhoneDO;
 import com.max.user.provider.mapper.SmsMapper;
 import com.max.user.provider.mapper.UserMapper;
+import com.max.user.provider.mapper.UserPhoneMapper;
 import com.max.user.provider.utils.UserRedisKeyBuilder;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -40,7 +41,8 @@ public class UserService{
     @Resource
     private UserRedisKeyBuilder userRedisKeyBuilder;
 
-
+    @Resource
+    private UserPhoneMapper userPhoneMapper;
 
     Logger log = LoggerFactory.getLogger(UserService.class);
     /**
@@ -89,8 +91,16 @@ public class UserService{
         UserDO userDO = new UserDO();
         //TODO 主键分配
         Long userId = 10L;
-        userDO.setUserId();
+        userDO.setUserId(userId);
+        userDO.setNickName("新用户-"+ userId);
+        userMapper.insert(userDO);
 
         UserPhoneDO userPhoneDO = new UserPhoneDO();
+        userPhoneDO.setUserId(userId);
+        userPhoneDO.setPhone(moblie);
+        userPhoneDO.setStatus(1);
+        userPhoneMapper.insert(userPhoneDO);
+
+        return UserLoginDTO.UserLoginSuccess(userId);
     }
 }

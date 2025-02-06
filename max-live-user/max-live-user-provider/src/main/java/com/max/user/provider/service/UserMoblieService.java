@@ -47,12 +47,12 @@ public class UserMoblieService {
 
     private UserLoginDTO registerAndLogin(String moblie) {
         //生成用户信息，并绑定手机号码(DB)
-
         UserLoginDTO userLoginDTO =userService.generateDefaultUserByMoblie(moblie);
-
 
         //删除缓存
         redisTemplate.delete(userCatchKeyBuilder.buildUserPhoneLoginKey(moblie));
+
+        return userLoginDTO;
     }
 
     private UserPhoneDTO queryUserByMoblie(String moblie) {
