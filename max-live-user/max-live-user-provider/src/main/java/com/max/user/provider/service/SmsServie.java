@@ -1,7 +1,10 @@
 package com.max.user.provider.service;
 
+import com.cloopen.rest.sdk.BodyType;
+import com.cloopen.rest.sdk.CCPRestSmsSDK;
 import com.max.common.redis.SMSCatchKeyBuilder;
 import com.max.dto.CheckLoginDTO;
+import com.max.user.provider.config.SMSCCPConfig;
 import com.max.user.provider.entity.SmsDO;
 import com.max.user.provider.mapper.SmsMapper;
 import jakarta.annotation.Resource;
@@ -12,7 +15,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,9 +34,14 @@ public class SmsServie {
     private SMSCatchKeyBuilder smsCatchKeyBuilder;
 
     @Resource
+    private SMSCCPConfig sMSCCPConfig;
+
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
     Logger log = LoggerFactory .getLogger(SmsServie.class);
+
+
 
 
     public boolean sendLoginCode(String mobile) {
@@ -49,11 +60,15 @@ public class SmsServie {
             log.info("手机号{}生成验证码{}", mobile, smsCode);
             redisTemplate.opsForValue().set(smskey, smsCode, 1, TimeUnit.MINUTES);
             //发送验证码
-            boolean sendSMS = sendSms(mobile , smsCode);
-
-            log.info("手机号{}发送验证码{}", mobile, smsCode);
-            //保存短信发送记录
-            insertSMSRecord(mobile, smsRecord);
+            //TODO 使用异步线程池发送短信
+            for (int i = 0; i < 3; i++) {
+                boolean sendSMS = sendSms(mobile , smsCode);
+                if(sendSMS){
+                    log.info("发送验证码成功");
+                    insertSMSRecord(mobile, smsCode);
+                    break;
+                }
+            }
 
             return true;
         }else {//如果有，则表明已经发送过验证码，则返回false
@@ -66,12 +81,64 @@ public class SmsServie {
         SmsDO smsDO = new SmsDO();
         smsDO.setPhone(mobile);
         smsDO.setCode((Integer) smsRecord);
-        //TODO 生成记录id
+        // 生成记录id:由mybatis自动生成
         smsMapper.insert(smsDO);
     }
 
     private boolean sendSms(String mobile, int smsCode) {
-        return true;
+        log.info("向13632871232发送验证码");
+        if(sMSCCPConfig.getTest()){
+            return true;
+        }else{
+            try {
+                //生产环境请求地址：app.cloopen.com
+                String serverIp = sMSCCPConfig.getServerIP();
+                //请求端口
+                String serverPort = sMSCCPConfig.getPort();
+                //主账号,登陆云通讯网站后,可在控制台首页看到开发者主账号ACCOUNT SID和主账号令牌AUTH TOKEN
+                String accountSId = sMSCCPConfig.getAccountSid();
+                String accountToken = sMSCCPConfig.getAccountToken();
+                //请使用管理控制台中已创建应用的APPID
+                String appId = sMSCCPConfig.getAppID();
+                CCPRestSmsSDK maxSms = new CCPRestSmsSDK();
+
+                maxSms.init(serverIp, serverPort);
+                maxSms.setAccount(accountSId, accountToken);
+                maxSms.setAppId(appId);
+                maxSms.setBodyType(BodyType.Type_JSON);
+                String to = sMSCCPConfig.getTestPhone();
+                String templateId= sMSCCPConfig.getTemplateID();
+                int code = new Random().nextInt(8999) + 1000;
+                // 模板短信
+                String[] datas = {String.valueOf(code)};
+
+                String subAppend="1234";  //可选	扩展码，四位数字 0~9999
+                String reqId= UUID.randomUUID().toString().substring(0, 8);  //可选 第三方自定义消息id，最大支持32位英文数字，同账号下同一自然天内不允许重复
+                HashMap<String, Object> result = maxSms.sendTemplateSMS(to,templateId,datas);
+                //HashMap<String, Object> result = maxSms.sendTemplateSMS(to,templateId,datas,subAppend,reqId);
+                if("000000".equals(result.get("statusCode"))){
+                    //正常返回输出data包体信息（map）
+                    HashMap<String,Object> data = (HashMap<String, Object>) result.get("data");
+                    Set<String> keySet = data.keySet();
+                    for(String key:keySet){
+                        Object object = data.get(key);
+                        log.info("sendsms key = {} , object = {}", key, object);
+                    }
+                    return true;
+                }else{
+                    //异常返回输出错误码和错误信息
+                    log.info("错误码=" + result.get("statusCode") +" 错误信息= "+result.get("statusMsg"));
+                    return false;
+                }
+            } catch (Exception e) {
+                log.error("sendSMSToCCP errot");
+                throw new RuntimeException(e);
+            }finally{
+                log.info("sendSMSToCCP end");
+                return false;
+            }
+        }
+
     }
 
     /**

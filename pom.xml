@@ -27,6 +27,8 @@
     <project.version>1.0</project.version>
     <mysql.version>8.0.28</mysql.version>
     <mybatis-plus.version>3.5.3</mybatis-plus.version>
+    <cosid.version>2.6.8</cosid.version>
+    <sms.version>1.0.4</sms.version>
 
   </properties>
 

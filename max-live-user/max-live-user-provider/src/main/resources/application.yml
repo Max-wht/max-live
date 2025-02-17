@@ -42,3 +42,15 @@ dubbo:
     port: -1
 
 
+maxlive:
+  sms:
+    ccp:
+      test: true
+      ServerIP: app.cloopen.com
+      Port: 8883
+      accountSid: 2c94811c946f6bfb0194df8a10f70887
+      accountToken: 04ca72e5f9244090932dff644fb2828e
+      appID: 2c94811c946f6bfb0194df8a12cf088e
+      templateID: 1
+      testPhone: 13632871232
+

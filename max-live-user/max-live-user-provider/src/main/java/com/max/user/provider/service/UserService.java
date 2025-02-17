@@ -3,6 +3,7 @@ package com.max.user.provider.service;
 import com.max.common.redis.SMSCatchKeyBuilder;
 import com.max.dto.UserDTO;
 import com.max.dto.UserLoginDTO;
+import com.max.id.inter.IGenerateIDRPCService;
 import com.max.inter.IUserRPCService;
 import com.max.live.utils.ConvertBeanUtil;
 import com.max.user.provider.entity.SmsDO;
@@ -33,6 +34,8 @@ public class UserService{
     @Autowired
     private UserMapper userMapper;
 
+    @Resource
+    private IGenerateIDRPCService generateIDRPCService;
 
 
     @Resource
@@ -89,8 +92,9 @@ public class UserService{
      */
     public UserLoginDTO generateDefaultUserByMoblie(String moblie) {
         UserDO userDO = new UserDO();
-        //TODO 主键分配
-        Long userId = 10L;
+        //主键分配
+        Long userId = generateIDRPCService.gerSeqId();//通过Dubbo调用id-generate服务生成主键
+
         userDO.setUserId(userId);
         userDO.setNickName("新用户-"+ userId);
         userMapper.insert(userDO);

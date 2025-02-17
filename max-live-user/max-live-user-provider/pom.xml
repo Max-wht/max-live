@@ -58,11 +58,8 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.max</groupId>
-            <artifactId>max-live-user-interface</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -75,6 +72,14 @@
             <version>${mybatis-plus.version}</version>
         </dependency>
 
+<!--        云通讯短信验证Maven依赖项-->
+        <dependency>
+            <groupId>com.cloopen</groupId>
+            <artifactId>java-sms-sdk</artifactId>
+            <version>${sms.version}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.max</groupId>
             <artifactId>max-live-redis-starter</artifactId>
@@ -86,6 +91,20 @@
             <artifactId>max-live-common</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.max</groupId>
+            <artifactId>max-live-user-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.max</groupId>
+            <artifactId>max-live-id-generate-interface</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
