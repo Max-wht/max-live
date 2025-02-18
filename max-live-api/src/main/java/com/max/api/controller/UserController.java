@@ -24,10 +24,10 @@ public class UserController {
     Logger log = LoggerFactory.getLogger(UserController.class);
 
     //引入dubbo服务
-    @DubboReference
+    @DubboReference(check = true)
     public IUserRPCService userRPCService;
 
-    @DubboReference
+    @DubboReference(check = true)
     public IUserMoblieRPCService userMoblieRPCService;
 
     /**
@@ -53,7 +53,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/sendmSMS")
-    public WebResDTO sendSMS(String mobile) {
+    public WebResDTO sendSMS(@RequestBody String mobile) {
         if(!StringUtils.hasText(mobile)){
             return WebResDTO.error("手机号不能为空");
         }

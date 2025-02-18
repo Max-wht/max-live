@@ -1,7 +1,9 @@
 package com.max.id.generate;
 
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @author Max
@@ -10,6 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
+@EnableDubbo
+@EnableDiscoveryClient
+
 public class IDGenerateApplication {
 
     public static void main(String[] args) {

@@ -45,7 +45,7 @@ dubbo:
 maxlive:
   sms:
     ccp:
-      test: true
+      test: false
       ServerIP: app.cloopen.com
       Port: 8883
       accountSid: 2c94811c946f6bfb0194df8a10f70887

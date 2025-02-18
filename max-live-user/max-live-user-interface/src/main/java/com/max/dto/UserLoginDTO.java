@@ -1,6 +1,8 @@
 package com.max.dto;
 
-public class UserLoginDTO {
+import java.io.Serializable;
+
+public class UserLoginDTO implements Serializable {
 
     private boolean loginStatus;
 

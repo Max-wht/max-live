@@ -1,10 +1,15 @@
 package com.max.id.inter;
 
+
+
 /**
  * @author Max
  * @description
  * @date 2025/2/6 15:58
  */
+
+
+
 public interface IGenerateIDRPCService {
 
     /**

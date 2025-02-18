@@ -1,6 +1,9 @@
 ECS:
   ip: 121.41.93.88
 
+server:
+  port: 8088
+
 spring:
   ###数据库连接配置信息###
   datasource:
@@ -59,5 +62,6 @@ cosid:
     mode: chain
     chain:
       safe-distributor: 10
+
 
 

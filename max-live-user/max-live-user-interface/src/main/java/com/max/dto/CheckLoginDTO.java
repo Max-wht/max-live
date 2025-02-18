@@ -1,10 +1,12 @@
 package com.max.dto;
 
+import java.io.Serializable;
+
 /**
  * Author: max
  * Discription: 校验验证码的结果数据
  */
-public class CheckLoginDTO {
+public class CheckLoginDTO implements Serializable {
 
     private boolean checkStatus;
 

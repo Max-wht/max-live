@@ -5,6 +5,7 @@ import com.max.id.inter.IGenerateIDRPCService;
 import jakarta.annotation.Resource;
 import me.ahoo.cosid.provider.IdGeneratorProvider;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.stereotype.Service;
 
 import static com.max.id.generate.utils.IDConstants.ID_SEQUENCE;
 import static com.max.id.generate.utils.IDConstants.ID_SNOWFLAKE;

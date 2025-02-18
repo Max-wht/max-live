@@ -5,6 +5,7 @@ import com.cloopen.rest.sdk.CCPRestSmsSDK;
 import com.max.common.redis.SMSCatchKeyBuilder;
 import com.max.dto.CheckLoginDTO;
 import com.max.user.provider.config.SMSCCPConfig;
+import com.max.user.provider.config.ThreadPoolManager;
 import com.max.user.provider.entity.SmsDO;
 import com.max.user.provider.mapper.SmsMapper;
 import jakarta.annotation.Resource;
@@ -46,7 +47,7 @@ public class SmsServie {
 
     public boolean sendLoginCode(String mobile) {
         //校验数据
-        if(mobile == null || mobile.length() != 11){
+        if(mobile == null && mobile.length() != 11){
             return false;
         }
         //生成一个和手机号相关联的RedisKey
@@ -60,16 +61,18 @@ public class SmsServie {
             log.info("手机号{}生成验证码{}", mobile, smsCode);
             redisTemplate.opsForValue().set(smskey, smsCode, 1, TimeUnit.MINUTES);
             //发送验证码
-            //TODO 使用异步线程池发送短信
-            for (int i = 0; i < 3; i++) {
-                boolean sendSMS = sendSms(mobile , smsCode);
-                if(sendSMS){
-                    log.info("发送验证码成功");
-                    insertSMSRecord(mobile, smsCode);
-                    break;
+            //TODO使用异步线程池发送短信
+            ThreadPoolManager.commonAsyncPool.execute(()->{
+                //发送验证码
+                for (int i = 0; i < 3; i++) {
+                    boolean sendSMS = sendSms(mobile , smsCode);
+                    if(sendSMS){
+                        log.info("发送验证码成功");
+                        insertSMSRecord(mobile, smsCode);
+                        break;
+                    }
                 }
-            }
-
+            });
             return true;
         }else {//如果有，则表明已经发送过验证码，则返回false
             log.info("手机号{}已经发送过验证码", mobile);
@@ -83,6 +86,11 @@ public class SmsServie {
         smsDO.setCode((Integer) smsRecord);
         // 生成记录id:由mybatis自动生成
         smsMapper.insert(smsDO);
+
+        //加载到数据库中
+        String smsKey = smsCatchKeyBuilder.buildSmsLoginCodeKey(mobile);
+        String smsCode = smsRecord.toString();
+        redisTemplate.opsForValue().set(smsKey, smsCode, 1, TimeUnit.MINUTES);
     }
 
     private boolean sendSms(String mobile, int smsCode) {
@@ -91,6 +99,7 @@ public class SmsServie {
             return true;
         }else{
             try {
+
                 //生产环境请求地址：app.cloopen.com
                 String serverIp = sMSCCPConfig.getServerIP();
                 //请求端口
@@ -109,11 +118,9 @@ public class SmsServie {
                 String to = sMSCCPConfig.getTestPhone();
                 String templateId= sMSCCPConfig.getTemplateID();
                 int code = new Random().nextInt(8999) + 1000;
-                // 模板短信
                 String[] datas = {String.valueOf(code)};
-
                 String subAppend="1234";  //可选	扩展码，四位数字 0~9999
-                String reqId= UUID.randomUUID().toString().substring(0, 8);  //可选 第三方自定义消息id，最大支持32位英文数字，同账号下同一自然天内不允许重复
+                String reqId="max";  //可选 第三方自定义消息id，最大支持32位英文数字，同账号下同一自然天内不允许重复
                 HashMap<String, Object> result = maxSms.sendTemplateSMS(to,templateId,datas);
                 //HashMap<String, Object> result = maxSms.sendTemplateSMS(to,templateId,datas,subAppend,reqId);
                 if("000000".equals(result.get("statusCode"))){
@@ -122,13 +129,11 @@ public class SmsServie {
                     Set<String> keySet = data.keySet();
                     for(String key:keySet){
                         Object object = data.get(key);
-                        log.info("sendsms key = {} , object = {}", key, object);
+                        System.out.println(key +" = "+object);
                     }
-                    return true;
                 }else{
                     //异常返回输出错误码和错误信息
-                    log.info("错误码=" + result.get("statusCode") +" 错误信息= "+result.get("statusMsg"));
-                    return false;
+                    System.out.println("错误码=" + result.get("statusCode") +" 错误信息= "+result.get("statusMsg"));
                 }
             } catch (Exception e) {
                 log.error("sendSMSToCCP errot");

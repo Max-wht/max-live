@@ -14,6 +14,7 @@ import com.max.user.provider.mapper.UserMapper;
 import com.max.user.provider.mapper.UserPhoneMapper;
 import com.max.user.provider.utils.UserRedisKeyBuilder;
 import jakarta.annotation.Resource;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,8 @@ public class UserService{
     @Autowired
     private UserMapper userMapper;
 
-    @Resource
+    @DubboReference
     private IGenerateIDRPCService generateIDRPCService;
-
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
