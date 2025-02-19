@@ -1,19 +1,28 @@
+server:
+  port: 80
+
 ECS:
   ip: 121.41.93.88
 
-#服务端口
-server:
-  port: 8081
-
-#Nacos注册地址
 spring:
   application:
-    name: max-live-api
+    name: max-live-gateway
   cloud:
     nacos:
       discovery:
         namespace: max-live
         server-addr: ${ECS.ip}:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id : max-live-api
+          uri: lb://max-live-api
+          predicates:
+            - Path=/user/**
+
+
 
 #dubbo服务注册地址
 dubbo:
@@ -27,4 +36,8 @@ dubbo:
     name: dubbo
     port: -1
 
-debug: true
+max-live:
+  gateway:
+    white-url-list:
+      - /user/mobileLogin
+      - /user/sendmSMS

@@ -3,6 +3,7 @@ package com.max.user.provider.service;
 import com.cloopen.rest.sdk.BodyType;
 import com.cloopen.rest.sdk.CCPRestSmsSDK;
 import com.max.common.redis.SMSCatchKeyBuilder;
+import com.max.common.redis.UserCatchKeyBuilder;
 import com.max.dto.CheckLoginDTO;
 import com.max.user.provider.config.SMSCCPConfig;
 import com.max.user.provider.config.ThreadPoolManager;
@@ -40,7 +41,10 @@ public class SmsServie {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
-    Logger log = LoggerFactory .getLogger(SmsServie.class);
+    @Resource
+    private UserCatchKeyBuilder userCatchKeyBuilder;
+
+    Logger log = LoggerFactory.getLogger(SmsServie.class);
 
 
 
@@ -61,7 +65,7 @@ public class SmsServie {
             log.info("手机号{}生成验证码{}", mobile, smsCode);
             redisTemplate.opsForValue().set(smskey, smsCode, 1, TimeUnit.MINUTES);
             //发送验证码
-            //TODO使用异步线程池发送短信
+            //TOLambdaQueryWrapper<UserPhoneDO> wrapper = new LambdaQueryWrapper<>();DO使用异步线程池发送短信
             ThreadPoolManager.commonAsyncPool.execute(()->{
                 //发送验证码
                 for (int i = 0; i < 3; i++) {
@@ -118,12 +122,17 @@ public class SmsServie {
                 String to = sMSCCPConfig.getTestPhone();
                 String templateId= sMSCCPConfig.getTemplateID();
                 int code = new Random().nextInt(8999) + 1000;
+                log.info("*******发送验证码{}", code);
                 String[] datas = {String.valueOf(code)};
                 String subAppend="1234";  //可选	扩展码，四位数字 0~9999
                 String reqId="max";  //可选 第三方自定义消息id，最大支持32位英文数字，同账号下同一自然天内不允许重复
                 HashMap<String, Object> result = maxSms.sendTemplateSMS(to,templateId,datas);
                 //HashMap<String, Object> result = maxSms.sendTemplateSMS(to,templateId,datas,subAppend,reqId);
                 if("000000".equals(result.get("statusCode"))){
+                    //向redis中添加验证码
+                    String phoneKey = smsCatchKeyBuilder.buildSmsLoginCodeKey(to);
+                    redisTemplate.opsForValue().set(phoneKey, code, 100, TimeUnit.MINUTES);
+
                     //正常返回输出data包体信息（map）
                     HashMap<String,Object> data = (HashMap<String, Object>) result.get("data");
                     Set<String> keySet = data.keySet();
@@ -155,28 +164,37 @@ public class SmsServie {
     public CheckLoginDTO checkLoginCode(String moblie, int code) {
         //参数校验
         if(!StringUtils.hasText(moblie) || code < 1000 || code > 9999){
+            log.info("手机号{}或者验证码{}错误", moblie, code);
             return new CheckLoginDTO(false, "参数错误");
         }
         //从redis中比较验证码是否正确
         String smskey = smsCatchKeyBuilder.buildSmsLoginCodeKey(moblie);
         Integer smsCode = (Integer)redisTemplate.opsForValue().get(smskey);
         if (smsCode == null) {
+            log.info("手机号{}验证码已过期", moblie);
             return new CheckLoginDTO(false, "验证码已过期");
         }
         if (smsCode.equals(code)) {
             redisTemplate.delete(smskey);
+            log.info("手机号{}验证码正确", moblie);
             return new CheckLoginDTO(true, "验证成功");
         } else {
+            log.info("手机号{}验证码错误", moblie);
             return new CheckLoginDTO(false, "验证码错误");
         }
     }
 
     /**
-     * 创建cookie
+     * 创建Cookies
      * @param userId
      * @return
      */
-    public String createCookie(Long userId){
-        return null;
+    public String createCookies(Long userId){
+        //生成Token
+        String token = UUID.randomUUID().toString();
+        //将Token与用户信息绑定
+        String userLoginTokenKey = userCatchKeyBuilder.buildUserPhoneLoginKey(token);
+        redisTemplate.opsForValue().set(userLoginTokenKey, userId, 1, TimeUnit.DAYS);
+        return token;
     }
 }

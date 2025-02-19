@@ -11,5 +11,7 @@ public interface IUserRPCService {
 
     CheckLoginDTO checkLoginCode(String moblie, int code);
 
-    String createCookie(Long userId);
+    String createCookies(Long userId);
+
+    Boolean checkToken(String token);
 }

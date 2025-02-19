@@ -35,14 +35,12 @@ public class UserMoblieService {
         }
         //检查手机号是否注册过
         UserPhoneDTO user =this.queryUserByMoblie(moblie);
-
         //如果注册过，就生成cookie
         if(null != user){
             return UserLoginDTO.UserLoginSuccess(user.getUserId());
         }
         //如果没有注册过，需要生成user记录，插入手机号绑定
         return registerAndLogin(moblie);
-
     }
 
     private UserLoginDTO registerAndLogin(String moblie) {
@@ -82,8 +80,8 @@ public class UserMoblieService {
     private UserPhoneDTO queryByUserPhoneFromDB(String moblie) {
 
         LambdaQueryWrapper<UserPhoneDO> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(UserPhoneDO::getPhone, moblie);
-        wrapper.eq(UserPhoneDO::getStatus, CommonStatusEnum.VALID_STATUS.getCode());
+        wrapper.eq(UserPhoneDO::getPhone, moblie);//getPhone == moblie
+        wrapper.eq(UserPhoneDO::getStatus, CommonStatusEnum.VALID_STATUS.getCode());//getStatus == VALID_STSTUS.getCode
         wrapper.last( "limit 1");
 
         UserPhoneDO userPhoneDO = userPhoneMapper.selectOne(wrapper);

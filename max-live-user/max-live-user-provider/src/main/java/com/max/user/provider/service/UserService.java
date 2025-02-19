@@ -1,6 +1,7 @@
 package com.max.user.provider.service;
 
 import com.max.common.redis.SMSCatchKeyBuilder;
+import com.max.common.redis.UserCatchKeyBuilder;
 import com.max.dto.UserDTO;
 import com.max.dto.UserLoginDTO;
 import com.max.id.inter.IGenerateIDRPCService;
@@ -46,6 +47,9 @@ public class UserService{
 
     @Resource
     private UserPhoneMapper userPhoneMapper;
+
+    @Resource
+    private UserCatchKeyBuilder userCatchKeyBuilder;
 
     Logger log = LoggerFactory.getLogger(UserService.class);
     /**
@@ -106,5 +110,11 @@ public class UserService{
         userPhoneMapper.insert(userPhoneDO);
 
         return UserLoginDTO.UserLoginSuccess(userId);
+    }
+
+    public Boolean checkToken(String token) {
+        //TODO token查询
+        String tokenKey = userCatchKeyBuilder.buildUserPhoneLoginKey(token);
+        return redisTemplate.hasKey(tokenKey);
     }
 }

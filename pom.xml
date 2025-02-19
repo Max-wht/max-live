@@ -16,6 +16,7 @@
       <module>max-live-redis-starter</module>
       <module>max-live-id-generate</module>
     <module>max-live-id-generate/max-live-id-generate-provider</module>
+      <module>max-live-gateway</module>
   </modules>
 
 <!--  版本控制-->
@@ -29,6 +30,8 @@
     <mybatis-plus.version>3.5.3</mybatis-plus.version>
     <cosid.version>2.6.8</cosid.version>
     <sms.version>1.0.4</sms.version>
+    <spring-cloud-starter-gateway.version>4.0.6</spring-cloud-starter-gateway.version>
+    <spring-cloud-starter-loadbalancer.version>4.0.3</spring-cloud-starter-loadbalancer.version>
 
   </properties>
 

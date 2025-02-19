@@ -79,7 +79,7 @@ public class UserController {
             return WebResDTO.error("手机号不能为空");
         }
         if(code < 1000 || code > 9999){
-            return WebResDTO.error("验证码错误");
+            return WebResDTO.error("验证码格式错误");
         }
 
         //2.检验验证码 -调用RPC服务
@@ -91,12 +91,14 @@ public class UserController {
         //4.如果之前没有登陆过就直接注册 - 调用RPC服务
         UserLoginDTO login = userMoblieRPCService.login(moblie);
 
-        //给前端返回cookies
-        String token = userRPCService.createCookie(login.getUserId());
-        Cookie cookis = new Cookie("mc" , token);
-        cookis.setMaxAge(60 * 60 * 24 * 7);
-        response.addCookie(cookis);
+        //给前端返回cookies("cokk" + token(通过方法调用))
+        //TODO修改Cookies
+        String token = userRPCService.createCookies(login.getUserId());
+        Cookie cookie = new Cookie("cokk", token);
+        cookie.setMaxAge(24 * 60 * 60);
 
+        //在响应头中添加cookies
+        response.addCookie(cookie);
         //5.返回登录状态
         return WebResDTO.success(login);
     }

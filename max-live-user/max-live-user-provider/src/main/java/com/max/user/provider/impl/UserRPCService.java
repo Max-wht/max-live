@@ -41,8 +41,13 @@ public class UserRPCService implements IUserRPCService{
     }
 
     @Override
-    public String createCookie(Long userId) {
-        return smsServie.createCookie(userId);
+    public String createCookies(Long userId) {
+        return smsServie.createCookies(userId);
+    }
+
+    @Override
+    public Boolean checkToken(String token) {
+        return userService.checkToken(token);
     }
 
 }
