@@ -2,6 +2,11 @@ package com.max.live.utils;
 
 import org.springframework.beans.BeanUtils;
 
+/**
+ * @author max
+ * @date 2025/2/8
+ * @desc DO 和 DTO 文件转换
+ */
 public class ConvertBeanUtil {
 
     public static <T> T convert(Object source, Class<T> target){

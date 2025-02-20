@@ -21,6 +21,20 @@ spring:
           uri: lb://max-live-api
           predicates:
             - Path=/user/**
+#      globalcors:
+#        corsConfigurations:
+#          '[/**]':
+#            allowedOrigins:
+#            - "*"
+#            allowedMethods:
+#              - "GET"
+#              - "POST"
+#              - "PUT"
+#              - "DELETE"
+#              - "OPTIONS"
+#            allowedHeaders: '*'
+#            allowCredentials: false
+#            max-age: 36000
 
 
 
@@ -41,3 +55,4 @@ max-live:
     white-url-list:
       - /user/mobileLogin
       - /user/sendmSMS
+      - /user/sendBin

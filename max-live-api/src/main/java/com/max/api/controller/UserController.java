@@ -17,9 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController {
     Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -52,6 +54,7 @@ public class UserController {
      * @param mobile
      * @return
      */
+    @CrossOrigin(origins = "*")
     @PostMapping("/sendmSMS")
     public WebResDTO sendSMS(@RequestBody String mobile) {
         if(!StringUtils.hasText(mobile)){
@@ -92,7 +95,6 @@ public class UserController {
         UserLoginDTO login = userMoblieRPCService.login(moblie);
 
         //给前端返回cookies("cokk" + token(通过方法调用))
-        //TODO修改Cookies
         String token = userRPCService.createCookies(login.getUserId());
         Cookie cookie = new Cookie("cokk", token);
         cookie.setMaxAge(24 * 60 * 60);
@@ -102,4 +104,6 @@ public class UserController {
         //5.返回登录状态
         return WebResDTO.success(login);
     }
+
+
 }
