@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
  */
 
 public class CheckNameUtil {
-
-    public  boolean checkWhetherBinOrHex(String originalFileName) {
+    public static boolean checkWhetherBinOrHex(String originalFileName) {
         return originalFileName.toLowerCase().endsWith(".bin") || originalFileName.toLowerCase().endsWith(".hex");
     }
 
