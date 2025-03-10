@@ -37,7 +37,9 @@ public class UserMoblieService {
         UserPhoneDTO user =this.queryUserByMoblie(moblie);
         //如果注册过，就生成cookie
         if(null != user){
-            return UserLoginDTO.UserLoginSuccess(user.getUserId());
+            //TODO
+            return UserLoginDTO.UserLoginSuccess2(user.getUserId(), user.getStatus());
+//            return UserLoginDTO.UserLoginSuccess(user.getUserId());
         }
         //如果没有注册过，需要生成user记录，插入手机号绑定
         return registerAndLogin(moblie);

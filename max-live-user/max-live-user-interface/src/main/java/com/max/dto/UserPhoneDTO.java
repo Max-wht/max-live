@@ -15,7 +15,7 @@ public class UserPhoneDTO implements Serializable {
 
     private String phone;
 
-    private Integer status;
+    private int status;
 
     private Date createTime;
 

@@ -5,33 +5,41 @@ import java.util.Date;
 
 public class UserDTO implements Serializable {
 
-    private Long userId;
+    private Long id;
     private String nickName;
     private String avatar;
     private  String trueName;
     private Integer sex;
     private Date createTime;
     private Date updateTime;
+    private int subCount;
+    private int userCharacter;
+    private int userLogin;
+    private int classesId;
 
     @Override
     public String toString() {
         return "UserDTO{" +
-                "userId=" + userId +
+                "id=" + id +
                 ", nickName='" + nickName + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", trueName='" + trueName + '\'' +
                 ", sex=" + sex +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
+                ", subCount=" + subCount +
+                ", userCharacter=" + userCharacter +
+                ", userLogin=" + userLogin +
+                ", classesId=" + classesId +
                 '}';
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNickName() {
@@ -48,6 +56,14 @@ public class UserDTO implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getTrueName() {
+        return trueName;
+    }
+
+    public void setTrueName(String trueName) {
+        this.trueName = trueName;
     }
 
     public Integer getSex() {
@@ -74,11 +90,35 @@ public class UserDTO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getTrueName() {
-        return trueName;
+    public int getSubCount() {
+        return subCount;
     }
 
-    public void setTrueName(String trueName) {
-        this.trueName = trueName;
+    public void setSubCount(int subCount) {
+        this.subCount = subCount;
+    }
+
+    public int getUserCharacter() {
+        return userCharacter;
+    }
+
+    public void setUserCharacter(int userCharacter) {
+        this.userCharacter = userCharacter;
+    }
+
+    public int getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(int userLogin) {
+        this.userLogin = userLogin;
+    }
+
+    public int getClassesId() {
+        return classesId;
+    }
+
+    public void setClassesId(int classesId) {
+        this.classesId = classesId;
     }
 }

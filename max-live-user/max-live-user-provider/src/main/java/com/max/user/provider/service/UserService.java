@@ -64,9 +64,9 @@ public class UserService{
         String userKey = userRedisKeyBuilder.buildUserKey(userId);
         //如果Redis中存在该用户信息，则从Redis中获取，否则从数据库中获取
         UserDTO userDTO = (UserDTO)redisTemplate.opsForValue().get(userKey);
-        if(userDTO != null && userDTO.getUserId() >= 0){
+        if(userDTO != null && userDTO.getId() >= 0){
             return userDTO;
-        }else if(userDTO != null && userDTO.getUserId() < 0){
+        }else if(userDTO != null && userDTO.getId() < 0){
             return null;
         }
         //userDTO == null 的情况，则从数据库中获取用户信息
@@ -78,7 +78,7 @@ public class UserService{
             return userDTO;
         }else {
             UserDTO noExistUser = new UserDTO();
-            noExistUser.setUserId(-10L);
+            noExistUser.setId(-10L);
             noExistUser.setNickName("该用户不存在");
             //将这个UserKey添加一个空值，防止缓存穿透
             redisTemplate.opsForValue().set(userKey, noExistUser, 20, TimeUnit.MINUTES);
@@ -99,17 +99,22 @@ public class UserService{
         //主键分配
         Long userId = generateIDRPCService.gerSeqId();//通过Dubbo调用id-generate服务生成主键
 
-        userDO.setUserId(userId);
+        userDO.setId(userId);
         userDO.setNickName("新用户-"+ userId);
+        userDO.setUserLogin(0);
+        userDO.setUserCharacter(0);
+        userDO.setSubCount(0);
+
         userMapper.insert(userDO);
 
         UserPhoneDO userPhoneDO = new UserPhoneDO();
         userPhoneDO.setUserId(userId);
         userPhoneDO.setPhone(moblie);
-        userPhoneDO.setStatus(1);
+        userPhoneDO.setStatus(0);
         userPhoneMapper.insert(userPhoneDO);
 
-        return UserLoginDTO.UserLoginSuccess(userId);
+        return UserLoginDTO.UserLoginSuccess2(userId,0);
+//        return UserLoginDTO.UserLoginSuccess(userId);
     }
 
     public Boolean checkToken(String token) {

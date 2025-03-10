@@ -3,7 +3,7 @@ ECS:
 
 #服务端口
 server:
-  port: 8082
+  port: 8083
 
 #Nacos注册地址
 spring:
@@ -40,18 +40,3 @@ dubbo:
   protocol:
     name: dubbo
     port: -1
-
-
-maxlive:
-  sms:
-    ccp:
-      test: false
-      ServerIP: app.cloopen.com
-      Port: 8883
-      accountSid: 2c94811c946f6bfb0194df8a10f70887
-      accountToken: 04ca72e5f9244090932dff644fb2828e
-      appID: 2c94811c946f6bfb0194df8a12cf088e
-      templateID: 1
-      testPhone: 17312269765
-#      testPhone: 13632761232
-

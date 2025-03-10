@@ -17,6 +17,8 @@
       <module>max-live-id-generate</module>
     <module>max-live-id-generate/max-live-id-generate-provider</module>
       <module>max-live-gateway</module>
+      <module>max-live-incident</module>
+    <module>max-live-incident/max-live-incident-provider</module>
   </modules>
 
 <!--  版本控制-->

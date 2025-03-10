@@ -98,7 +98,7 @@ public class SmsServie {
     }
 
     private boolean sendSms(String mobile, int smsCode) {
-        log.info("向13632871232发送验证码");
+        log.info("向"+ mobile +"发送验证码");
         if(sMSCCPConfig.getTest()){
             return true;
         }else{
@@ -119,6 +119,7 @@ public class SmsServie {
                 maxSms.setAccount(accountSId, accountToken);
                 maxSms.setAppId(appId);
                 maxSms.setBodyType(BodyType.Type_JSON);
+//                String to = mobile;
                 String to = sMSCCPConfig.getTestPhone();
                 String templateId= sMSCCPConfig.getTemplateID();
                 int code = new Random().nextInt(8999) + 1000;
