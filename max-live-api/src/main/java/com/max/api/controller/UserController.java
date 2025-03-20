@@ -1,23 +1,20 @@
 package com.max.api.controller;
 
-import com.max.api.entity.MobileLoginParam;
-import com.max.api.entity.QueryUserParam;
-import com.max.api.entity.WebResDTO;
+import com.max.api.Param.MobileLoginParam;
+import com.max.api.Param.QueryUserParam;
+import com.max.api.Param.WebResDTO;
 import com.max.dto.CheckLoginDTO;
 import com.max.dto.UserDTO;
 import com.max.dto.UserLoginDTO;
 import com.max.inter.IUserMoblieRPCService;
 import com.max.inter.IUserRPCService;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/user")
@@ -104,6 +101,8 @@ public class UserController {
         //5.返回登录状态
         return WebResDTO.success(login);
     }
+
+
 
 
 }

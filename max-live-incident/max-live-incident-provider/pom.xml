@@ -58,6 +58,7 @@
             <version>${mysql.version}</version>
         </dependency>
 
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -78,6 +79,11 @@
         <dependency>
             <groupId>com.max</groupId>
             <artifactId>max-live-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.max</groupId>
+            <artifactId>max-live-id-generate-interface</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

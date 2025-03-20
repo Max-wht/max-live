@@ -11,16 +11,25 @@ import java.util.List;
 public class PageBean<T> implements Serializable {
 
     private List<T> row;
-
+    private int total;
     public PageBean(List<T> row) {
         this.row = row;
     }
+    public PageBean(List<T> row, int total) {
+        this.row = row;
+        this.total = total;
+    }
 
-    @Override
-    public String toString() {
-        return "PageBean{" +
-                "row=" + row +
-                '}';
+    public PageBean() {
+
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public List<T> getRow() {
@@ -29,5 +38,13 @@ public class PageBean<T> implements Serializable {
 
     public void setRow(List<T> row) {
         this.row = row;
+    }
+
+    @Override
+    public String toString() {
+        return "PageBean{" +
+                "row=" + row +
+                ", total=" + total +
+                '}';
     }
 }

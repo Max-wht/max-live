@@ -20,11 +20,14 @@ dubbo:
   application:
     name: ${spring.application.name}
     qos-enable: false
+    check-serializable: false
   registry:
     address: nacos://${ECS.ip}:8848?namespace=max-live
     id: nacos-registry
   protocol:
     name: dubbo
     port: -1
+
+
 
 debug: true

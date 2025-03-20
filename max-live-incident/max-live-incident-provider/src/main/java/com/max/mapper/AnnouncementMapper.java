@@ -20,5 +20,17 @@ public interface AnnouncementMapper {
      */
     List<AnnounceDTO> getAnnounceList(@Param("name") String name,
                                       @Param("startTime") Date startTime,
-                                      @Param("endTime") Date endTime);
+                                      @Param("endTime") Date endTime,
+                                      @Param("offset") int offset,
+                                      @Param("pageSize") int pageSize);
+
+    void updateAnnounce(@Param("name") String name,
+                        @Param("content") String content,
+                        @Param("id") int id);
+
+    void delete(Integer id);
+
+    void saveAnnounce(@Param("id") Long announcementID,
+                      @Param("name") String name,
+                      @Param("content") String content);
 }

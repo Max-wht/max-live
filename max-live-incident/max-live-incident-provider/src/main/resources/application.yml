@@ -31,6 +31,8 @@ spring:
 
 #dubbo服务注册地址
 dubbo:
+  serialization:
+    allowlist: com.github.pagehelper.Page
   application:
     name: ${spring.application.name}
     qos-enable: false

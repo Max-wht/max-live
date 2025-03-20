@@ -3,6 +3,8 @@ package com.max.inter;
 import com.max.dto.AnnounceDTO;
 import com.max.live.page.PageBean;
 
+import java.util.List;
+
 /**
  * @author Max
  * @description
@@ -11,4 +13,10 @@ import com.max.live.page.PageBean;
 public interface IAnnounceRPCService {
 
     PageBean<AnnounceDTO> getAnnounceList(AnnounceDTO announceDTO);
+
+    void updateAnnounce(AnnounceDTO announceDTO);
+
+    void batchDelete(Integer id);
+
+    void save(AnnounceDTO announceDTO);
 }

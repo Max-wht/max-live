@@ -1,4 +1,4 @@
-package com.max.api.entity;
+package com.max.api.Param;
 
 public class WebResDTO {
 

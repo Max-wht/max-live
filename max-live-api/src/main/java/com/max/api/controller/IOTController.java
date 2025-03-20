@@ -1,11 +1,10 @@
 package com.max.api.controller;
 
-import com.max.api.entity.WebResDTO;
+import com.max.api.Param.WebResDTO;
 import com.max.dto.CheckSendBinDTO;
 import com.max.dto.IOTBinFile;
 import com.max.inter.IUserIotRPCService;
 import com.max.live.utils.CheckNameUtil;
-import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
