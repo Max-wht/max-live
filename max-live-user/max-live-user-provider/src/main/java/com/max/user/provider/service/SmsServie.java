@@ -56,6 +56,7 @@ public class SmsServie {
         }
         //生成一个和手机号相关联的RedisKey
         String smskey = smsCatchKeyBuilder.buildSmsLoginCodeKey(mobile);
+        log.info("smsKey==" + smskey);
         //去Redis查询是否有这个手机号对应的验证码
         Object smsRecord = redisTemplate.opsForValue().get(smskey);
 

@@ -1,11 +1,10 @@
 package com.max.api.controller;
 
-import com.max.api.Param.WebResDTO;
+import com.max.api.DTO.WebResDTO;
 import com.max.api.VO.AnnounceVO;
 import com.max.dto.AnnounceDTO;
 import com.max.inter.IAnnounceRPCService;
 import com.max.live.page.PageBean;
-import com.max.live.utils.ConvertBeanUtil;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.*;

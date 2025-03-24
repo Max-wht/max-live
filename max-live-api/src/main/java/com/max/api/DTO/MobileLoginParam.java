@@ -1,4 +1,4 @@
-package com.max.api.Param;
+package com.max.api.DTO;
 
 public class MobileLoginParam {
     private String mobile;

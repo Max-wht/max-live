@@ -2,6 +2,7 @@ package com.max.user.provider.service;
 
 import com.max.common.redis.SMSCatchKeyBuilder;
 import com.max.common.redis.UserCatchKeyBuilder;
+import com.max.dto.StudentDTO;
 import com.max.dto.UserDTO;
 import com.max.dto.UserLoginDTO;
 import com.max.id.inter.IGenerateIDRPCService;
@@ -23,6 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -118,8 +120,18 @@ public class UserService{
     }
 
     public Boolean checkToken(String token) {
-        //TODO token查询
+        //token查询
         String tokenKey = userCatchKeyBuilder.buildUserPhoneLoginKey(token);
         return redisTemplate.hasKey(tokenKey);
+    }
+
+    public List<StudentDTO> queryStudents(String userName, String sortBy, Integer page, Integer pageSize) {
+        int pageStart = (page - 1) * pageSize;
+        log.info("查询学生信息，参数：userName={}, sortBy={}, page={}, pageSize={}", userName, sortBy, page, pageSize);
+        return userMapper.queryStudents(userName, sortBy, pageStart, pageSize);
+    }
+
+    public int queryStudentsTotal(String userName) {
+        return userMapper.queryStudentsTotal(userName);
     }
 }

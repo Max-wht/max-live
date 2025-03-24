@@ -1,20 +1,31 @@
 package com.max.api.controller;
 
-import com.max.api.Param.MobileLoginParam;
-import com.max.api.Param.QueryUserParam;
-import com.max.api.Param.WebResDTO;
+import com.alibaba.dubbo.container.page.Page;
+import com.max.api.DTO.MobileLoginParam;
+import com.max.api.DTO.QueryUserParam;
+import com.max.api.DTO.SearchMethods;
+import com.max.api.DTO.WebResDTO;
+import com.max.api.VO.StudentVO;
+import com.max.api.VO.UserVO;
 import com.max.dto.CheckLoginDTO;
+import com.max.dto.StudentDTO;
 import com.max.dto.UserDTO;
 import com.max.dto.UserLoginDTO;
 import com.max.inter.IUserMoblieRPCService;
 import com.max.inter.IUserRPCService;
+import com.max.live.page.PageBean;
+import com.max.live.utils.ConvertBeanUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -102,7 +113,67 @@ public class UserController {
         return WebResDTO.success(login);
     }
 
+    /**
+     * 在用户登录之后给网页返回用户信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("/auth")
+    public WebResDTO sendUserInfo(@RequestParam("userId") Long userId){
+        if( null == userId || userId <= 0){
+            return WebResDTO.error("用户id为空，或者id不正确");
+        }
+        try {
+            UserDTO userById = userRPCService.getUserById(userId);
 
+            UserVO userVO = new UserVO();
+            userVO.setId(userById.getId().toString());
+            userVO.setUserName(userById.getNickName());
+            userVO.setUserAvatar(userById.getAvatar());
+            userVO.setSubCount(userById.getSubCount());
+            userVO.setUserRole(userById.getUserCharacter());
+            if(null == userById){
+                return WebResDTO.error("用户信息为空");
+            }else{
+                return WebResDTO.success(userVO);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    /**
+     * 查询所有用户信息，按需求排序
+     * @param userName
+     * @param sortBy
+     * @return
+     */
+    @GetMapping("/queryStudents")
+    private WebResDTO sendAllMemberInfo(@RequestParam(required = false) String userName,
+                                        @RequestParam String sortBy,
+                                        @RequestParam Integer page,
+                                        @RequestParam Integer pageSize){
+        if(sortBy == null) {
+            return WebResDTO.error("排序字段为空,请刷新页面");
+        }
+        try {
+            SearchMethods.valueOf(sortBy);
+        } catch (IllegalArgumentException e){
+            return WebResDTO.error("无效的排序方式");
+        }
+        PageBean<StudentVO> pageBean = new PageBean<>();
+        try {
+            List<StudentDTO> studentsListDTO =userRPCService.queryStudents(userName, sortBy, page, pageSize);
+            List<StudentVO> studentsListVO = studentsListDTO.stream()
+                            .map(dto -> ConvertBeanUtil.convert(dto, StudentVO.class))
+                            .collect(Collectors.toList());
+            pageBean.setRow(studentsListVO);
+            pageBean.setTotal(userRPCService.queryStudentsTotal(userName));
+            return WebResDTO.success(pageBean);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 }

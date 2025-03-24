@@ -12,6 +12,8 @@ import com.max.user.provider.entity.UserPhoneDO;
 import com.max.user.provider.mapper.UserMapper;
 import com.max.user.provider.mapper.UserPhoneMapper;
 import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,21 +30,30 @@ public class UserMoblieService {
     private UserPhoneMapper userPhoneMapper;
     @Resource
     private UserService userService;
+
+    Logger log = LoggerFactory.getLogger(UserMoblieService.class);
+
     public UserLoginDTO login(String moblie) {
         //参数校验
         if(!StringUtils.hasText(moblie)){
             return null;
         }
+        log.info("正在检查手机号是否注册过");
         //检查手机号是否注册过
         UserPhoneDTO user =this.queryUserByMoblie(moblie);
+
+
         //如果注册过，就生成cookie
         if(null != user){
-            //TODO
+            log.info("手机号已经注册过");
+            log.info(user.toString());
             return UserLoginDTO.UserLoginSuccess2(user.getUserId(), user.getStatus());
 //            return UserLoginDTO.UserLoginSuccess(user.getUserId());
+        }else{
+            //如果没有注册过，需要生成user记录，插入手机号绑定
+            log.info("手机号没有注册过");
+            return registerAndLogin(moblie);
         }
-        //如果没有注册过，需要生成user记录，插入手机号绑定
-        return registerAndLogin(moblie);
     }
 
     private UserLoginDTO registerAndLogin(String moblie) {

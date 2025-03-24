@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.max.user.provider.mapper.UserMapper">
+
+    <select id="queryStudents" resultType="com.max.dto.StudentDTO">
+        SELECT * FROM m_user
+        <where>
+            <if test="userName != null and userName != ''">
+                and nick_name like concat('%', #{userName}, '%')
+            </if>
+        </where>
+        <choose>
+            <when test="sortBy == 'SUB_COUNT_DESC'">
+                ORDER BY sub_count DESC
+            </when>
+            <when test="sortBy == 'SUB_COUNT_ASC'">
+                ORDER BY sub_count ASC
+            </when>
+            <when test="sortBy == 'NAME_ASC'">
+                ORDER BY nick_name ASC
+            </when>
+            <when test="sortBy == 'NAME_DESC'">
+                ORDER BY nick_name DESC
+            </when>
+            <when test="sortBy == 'SUB_TIME_DESC'">
+                ORDER BY update_time DESC
+            </when>
+            <when test="sortBy == 'SUB_TIME_ASC'">
+                ORDER BY update_time ASC
+            </when>
+        </choose>
+        LIMIT #{pageSize} OFFSET #{pageStart}
+    </select>
+
+    <!-- 新增统计数量的SQL -->
+    <select id="queryStudentsTotal" resultType="int">
+        SELECT COUNT(*) FROM m_user
+        <where>
+            <if test="userName != null and userName != ''">
+                nick_name like concat('%', #{userName}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

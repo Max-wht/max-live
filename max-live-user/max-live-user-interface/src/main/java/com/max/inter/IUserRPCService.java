@@ -1,7 +1,10 @@
 package com.max.inter;
 
 import com.max.dto.CheckLoginDTO;
+import com.max.dto.StudentDTO;
 import com.max.dto.UserDTO;
+
+import java.util.List;
 
 public interface IUserRPCService {
 
@@ -14,4 +17,8 @@ public interface IUserRPCService {
     String createCookies(Long userId);
 
     Boolean checkToken(String token);
+
+    List<StudentDTO> queryStudents(String userName, String sortBy, Integer page, Integer pageSize);
+
+    int queryStudentsTotal(String userName);
 }

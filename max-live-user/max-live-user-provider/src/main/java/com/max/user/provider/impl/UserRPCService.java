@@ -1,12 +1,15 @@
 package com.max.user.provider.impl;
 
 import com.max.dto.CheckLoginDTO;
+import com.max.dto.StudentDTO;
 import com.max.dto.UserDTO;
 import com.max.inter.IUserRPCService;
 import com.max.user.provider.service.SmsServie;
 import com.max.user.provider.service.UserService;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
+
+import java.util.List;
 
 
 @DubboService
@@ -48,6 +51,16 @@ public class UserRPCService implements IUserRPCService{
     @Override
     public Boolean checkToken(String token) {
         return userService.checkToken(token);
+    }
+
+    @Override
+    public List<StudentDTO> queryStudents(String userName, String sortBy, Integer page, Integer pageSize) {
+        return userService.queryStudents(userName,sortBy,page,pageSize);
+    }
+
+    @Override
+    public int queryStudentsTotal(String userName) {
+        return userService.queryStudentsTotal(userName);
     }
 
 }

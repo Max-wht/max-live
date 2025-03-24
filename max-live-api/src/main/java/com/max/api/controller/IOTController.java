@@ -1,6 +1,6 @@
 package com.max.api.controller;
 
-import com.max.api.Param.WebResDTO;
+import com.max.api.DTO.WebResDTO;
 import com.max.dto.CheckSendBinDTO;
 import com.max.dto.IOTBinFile;
 import com.max.inter.IUserIotRPCService;
