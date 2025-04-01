@@ -10,6 +10,7 @@ import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import java.util.List;
+import java.util.Map;
 
 
 @DubboService
@@ -61,6 +62,11 @@ public class UserRPCService implements IUserRPCService{
     @Override
     public int queryStudentsTotal(String userName) {
         return userService.queryStudentsTotal(userName);
+    }
+
+    @Override
+    public Map<Integer, String> getClassMap() {
+        return userService.getClassMap();
     }
 
 }

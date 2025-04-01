@@ -15,6 +15,7 @@ import org.slf4j.Logger;
  */
 @DubboService
 public class AnnounceRPCService implements IAnnounceRPCService {
+
     Logger log = org.slf4j.LoggerFactory.getLogger(AnnounceRPCService.class);
     @Resource
     private NoticeService noticeService;
@@ -25,6 +26,7 @@ public class AnnounceRPCService implements IAnnounceRPCService {
             return noticeService.getList(announceDTO);
         } catch (Exception e) {
             log.info("查询失败");
+            //11111
             throw new RuntimeException(e);
         }
     }

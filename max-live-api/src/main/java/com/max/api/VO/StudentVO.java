@@ -12,9 +12,15 @@ public class StudentVO {
     private String nickName;
     private Integer subCount;
     private Integer userCharacter;
-    private Integer classesId;
+    private String className;
     private Date updateTime;
 
+    public String getClassName() {
+        return className;
+    }
+    public void setClassName(String className) {
+        this.className = className;
+    }
     public String getAvatar() {
         return avatar;
     }
@@ -45,14 +51,6 @@ public class StudentVO {
 
     public void setUserCharacter(Integer userCharacter) {
         this.userCharacter = userCharacter;
-    }
-
-    public Integer getClassesId() {
-        return classesId;
-    }
-
-    public void setClassesId(Integer classesId) {
-        this.classesId = classesId;
     }
 
     public Date getUpdateTime() {

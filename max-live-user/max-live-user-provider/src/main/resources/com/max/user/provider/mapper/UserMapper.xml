@@ -43,4 +43,8 @@
             </if>
         </where>
     </select>
+
+    <select id="getClassMap" resultType="com.max.dto.ClassDTO">
+        SELECT id, name FROM m_classes
+    </select>
 </mapper>

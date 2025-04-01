@@ -1,17 +1,14 @@
 package com.max.user.provider.service;
 
-import com.max.common.redis.SMSCatchKeyBuilder;
 import com.max.common.redis.UserCatchKeyBuilder;
+import com.max.dto.ClassDTO;
 import com.max.dto.StudentDTO;
 import com.max.dto.UserDTO;
 import com.max.dto.UserLoginDTO;
 import com.max.id.inter.IGenerateIDRPCService;
-import com.max.inter.IUserRPCService;
 import com.max.live.utils.ConvertBeanUtil;
-import com.max.user.provider.entity.SmsDO;
 import com.max.user.provider.entity.UserDO;
 import com.max.user.provider.entity.UserPhoneDO;
-import com.max.user.provider.mapper.SmsMapper;
 import com.max.user.provider.mapper.UserMapper;
 import com.max.user.provider.mapper.UserPhoneMapper;
 import com.max.user.provider.utils.UserRedisKeyBuilder;
@@ -23,10 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Max
@@ -133,5 +131,13 @@ public class UserService{
 
     public int queryStudentsTotal(String userName) {
         return userMapper.queryStudentsTotal(userName);
+    }
+
+    public Map<Integer, String> getClassMap() {
+        List<ClassDTO> classList = userMapper.getClassMap();
+        System.out.println("classList = " + classList);
+        Map<Integer, String> classMap = new HashMap<>();
+        classList.forEach(dto -> classMap.put(dto.getId(), dto.getName()));
+        return classMap;
     }
 }

@@ -25,6 +25,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -150,6 +152,7 @@ public class UserController {
      */
     @GetMapping("/queryStudents")
     private WebResDTO sendAllMemberInfo(@RequestParam(required = false) String userName,
+                                        //nnnnnn
                                         @RequestParam String sortBy,
                                         @RequestParam Integer page,
                                         @RequestParam Integer pageSize){
@@ -164,9 +167,14 @@ public class UserController {
         PageBean<StudentVO> pageBean = new PageBean<>();
         try {
             List<StudentDTO> studentsListDTO =userRPCService.queryStudents(userName, sortBy, page, pageSize);
+            Map<Integer, String> classMap = userRPCService.getClassMap();
             List<StudentVO> studentsListVO = studentsListDTO.stream()
-                            .map(dto -> ConvertBeanUtil.convert(dto, StudentVO.class))
-                            .collect(Collectors.toList());
+                    .map(dto -> {
+                                StudentVO vo = ConvertBeanUtil.convert(dto , StudentVO.class);
+                                vo.setClassName(classMap.getOrDefault(dto.getClassesId(), "管理员"));
+                                return vo;
+                            })
+                    .collect(Collectors.toList());
             pageBean.setRow(studentsListVO);
             pageBean.setTotal(userRPCService.queryStudentsTotal(userName));
             return WebResDTO.success(pageBean);

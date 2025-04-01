@@ -5,6 +5,7 @@ import com.max.dto.StudentDTO;
 import com.max.dto.UserDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IUserRPCService {
 
@@ -21,4 +22,6 @@ public interface IUserRPCService {
     List<StudentDTO> queryStudents(String userName, String sortBy, Integer page, Integer pageSize);
 
     int queryStudentsTotal(String userName);
+
+    Map<Integer, String> getClassMap();
 }
