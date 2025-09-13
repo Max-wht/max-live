@@ -1,8 +1,8 @@
-# 这是一个有关音视频的分布式java程序
+# distributed web2 server
 
 
 
-## 1.我使用的开发工具
+## 1. dev Tools
 
 - `IDEA`
 - `SpringBoot`
